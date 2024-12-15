@@ -1,28 +1,25 @@
 #include <stdio.h>
-#include <graphics.h>
 
-struct a {
-    int red, blue, green, yellow;
-} a;
-int snake[2];
-int ladder[2];
-int board[21][21];
-int dice;
+char matrix[20][20];
 
-void normal () {
-    a.red = board[20][9];
-    if (dice!=6) {
-        if (dice==1) {
-            a.red = board[20][dice];
+void maze_1 () {
+    FILE *f = fopen ("maze_1.txt", "r");
+    int i, j;
+    char dice;
+    if (f==NULL) {
+        printf ("Maze not found!\n");
+    }
+    for (i=0; i<20; i++) {
+        for (j=0; j<20; j++) {
+            while ((matrix[i][j] = fgetc (f)) != EOF) {   
+                printf ("%c", matrix[i][j]);
+            }
         }
     }
-    a.blue = board[9][0];
-    a.yellow = board[0][9];
-    a.green = board[9][20];
+    fclose (f);
 }
-void snakeMode ();
-void labyrinth ();
 
 int main () {
+    maze_1 ();
     return 0;
 }
