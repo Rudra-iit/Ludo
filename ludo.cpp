@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 char matrix[20][20];
 int i=0, j=0;
@@ -35,9 +36,11 @@ void print () {
 int main () {
     maze_1 ();
     print ();
-    char dice;
-    scanf ("%c", &dice);
-    matrix [0][5] = dice;
+    matrix [0][5] = '$';
+    print ();
+    int x = rand () % 6 + 1;
+    printf ("%d\n", x);
+    matrix [x-3][5+3] = '$';
     print ();
     return 0;
 }
