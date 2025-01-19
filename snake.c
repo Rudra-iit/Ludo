@@ -27,7 +27,7 @@ int main () {
         }
     }
     print (board);
-    int x = rand () % 12 + 1;
+    int x = rand () % 6 + 1;
     printf ("%d\n", x);
     board[0][x] = 0;
     print (board);
