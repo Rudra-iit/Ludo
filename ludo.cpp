@@ -4,17 +4,19 @@
 char matrix[20][20];
 int i=0, j=0;
 
-struct Node {
-    int data;
-    struct Node *left;
-    struct Node *right;
-};
+typedef struct Node {
+    int x, y;
+    struct Node *left, *right, *up, *down;
+} Node;
 
-struct Node* treeNode (int d) {
-    struct Node* newNode = (struct Node*) malloc (sizeof (struct Node*));
-    newNode->data = d;
+Node* make_node (int x, int y) {
+    Node* newNode = (Node*) malloc (sizeof (Node));
+    newNode->x = x;
+    newNode->y = y;
     newNode->left = NULL;
     newNode->right = NULL;
+    newNode->up = NULL;
+    newNode->down = NULL;
     return newNode;
 }
 
@@ -37,12 +39,20 @@ void maze_1 () {
     fclose (f);
 }
 
-void tree (char matrix[20][20]) {
-    int i, j;
-
+Node* tree (char matrix[20][20], int x, int y, int row, int column) {
+    if (x<0 || x>=row || y<0 || y>=column || matrix[x][y]=='#') {
+        return NULL;
+    }
+    Node* node = make_node (x, y);
+    matrix[x][y] = '#';
+    node->left = tree (matrix, x, y-1, row, column);
+    node->right = tree (matrix, x, y+1, row, column);
+    node->up = tree (matrix, x-1, y, row, column);
+    node->down = tree (matrix, x+1, y, row, column);
+    return node;
 }
 
-void print () {
+void print_matrix () {
     for (i=0; i<20; i++) {
         for (j=0; j<20; j++) {
             printf ("%c", matrix[i][j]);
@@ -52,76 +62,29 @@ void print () {
     printf ("\n");
 }
 
+void print_tree (Node* root) {
+    if (root==NULL) {
+        return;
+    }
+    printf ("%d %d\n", root->x, root->y);
+    print_tree (root->left);
+    print_tree (root->right);
+    print_tree (root->up);
+    print_tree (root->down);
+}
+
 int main () {
     maze_1 ();
-    print ();
+    print_matrix ();
+    Node* root = tree (matrix, 0, 5, 20, 20);
+    print_tree (root);
+    /*
     matrix [0][5] = '$';
-    print ();
+    print_matrix ();
     int x = rand () % 6 + 1;
     printf ("%d\n", x);
     matrix [x-3][5+3] = '$';
-    print ();
+    print_matrix ();
+    */
     return 0;
 }
-
-/*#include <stdio.h>
-#include <stdlib.h>
-
-struct node {
-    int num;                
-    struct node *nextptr;   
-} *stnode;                  
-
-void createNodeList (int n) {
-    struct node *fnNode, *tmp;
-    int num, i;
-    stnode = (struct node *)malloc(sizeof(struct node));
-    if (stnode == NULL) {
-        printf ("Memory can not be allocated.");
-    } 
-    else {
-        printf ("Node input:\n");
-        scanf ("%d", &num);
-        stnode->num = num;      
-        stnode->nextptr = NULL; 
-        tmp = stnode;
-        for (i=2; i<=n; i++) {
-            fnNode = (struct node *)malloc(sizeof(struct node));
-            if (fnNode == NULL) {
-                printf("Memory can not be allocated.");
-                break;
-            } 
-            else {
-                scanf("%d", &num);
-                fnNode->num = num;      
-                fnNode->nextptr = NULL;
-                tmp->nextptr = fnNode; 
-                tmp = tmp->nextptr;   
-            }
-        }
-    }
-}
-
-void displayList () {
-    struct node *tmp;
-    if (stnode == NULL) {
-        printf("List is empty.");
-    } 
-    else {
-        tmp = stnode;
-        while (tmp != NULL) {
-            printf ("%d ", tmp->num); 
-            tmp = tmp->nextptr;
-        }
-    }
-}
-
-int main () {
-    int n;
-    printf ("Number of nodes: ");
-    scanf ("%d", &n);
-    createNodeList (n);
-    printf ("Data entered in the list: \n");
-    displayList ();
-    return 0;
-}*/
