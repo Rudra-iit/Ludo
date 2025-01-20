@@ -59,12 +59,26 @@ int main () {
             int a = rand () % 90 + 1;
             int b = rand () % 80 + 1;
 
+            if (a>b) {
+                printf ("Snake exists between %d & %d\n", a, b);
+            }
+            else {
+                printf ("Ladder exists between %d & %d\n", a, b);
+            }
+
             for (i=0; i<10; i++) {
                 for (j=0; j<10; j++) {
 
                     board[i][j] = snake[i][j];
 
-                    if (y==snake[i][j]) {
+                    if (y==a) {
+                        if (snake[i][j]==b) {
+                            board[i][j] = 0;
+                            y = b;
+                        }
+                    }
+
+                    else if (y==snake[i][j]) {
                         board[i][j] = 0;
                     }
 
