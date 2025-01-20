@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int board[10][10], i, j;
+int board[10][10], snake[10][10], i, j;
 
 void print (int board[10][10]) {
     printf ("\n");
@@ -25,32 +25,32 @@ int main () {
     char dice;
     for (i=10-1; i>=0; i--) {
         for (j=10-1; j>=0; j--) {
-            board[i][j] = i*10 + (j+1);
+            snake[i][j] = i*10 + (j+1);
         }
     }
-    print (board);
-    int y=0;
-    while (y<=100) {
-        printf ("Role dice: ");
+    int y=1;
+    while (1) {
+        printf ("Role: ");
         scanf ("%c", &dice);
         int x = rand () % 5 + 1;
         y = x+y;
-        int s = rand () % 90 + 1;
-        int e = rand () % 80 + 1;
-        printf ("\nThe dice roles %d, snake's head is %d and tail is %d\n", x, s, e);
+        printf ("The dice roles %d\n", x);
         for (i=0; i<10; i++) {
             for (j=0; j<10; j++) {
-                if (y==s) {
-                    if (board[i][j]==e) {
-                        board[i][j] = 0;
-                    }
-                }
-                else if (board[i][j]==y) {
+                board[i][j] = snake[i][j];
+                if (y==snake[i][j]) {
                     board[i][j] = 0;
                 }
             }
         }
-    print (board);
+        print (board);
+        if (y==100) {
+            printf ("Game completed!");
+            break;
+        }
+        if (y>100) {
+            y=y-x;
+        }
     }
     return 0;
 }
