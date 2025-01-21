@@ -57,10 +57,10 @@ int main () {
             y1 = y1+x;
             printf ("The dice roles %d\n", x);
 
-            int a = rand () % 90 + 1;
-            int b = rand () % 80 + 1;
-            int c = rand () % 70 + 1;
-            int d = rand () % 40 + 1;
+            int a = rand () % 40 + 1;
+            int b = rand () % 20 + 1;
+            int c = rand () % 45 + 1;
+            int d = rand () % 30 + 1;
 
             if (a>b) {
                 printf ("Snake exists between %d & %d\n", a, b);
@@ -112,7 +112,6 @@ int main () {
 
         printf ("\n2nd Role: ");
         scanf (" %c", &dice);
-
         if (dice!='y') {
             printf ("Sorry, press 'y' to try again.\n");
         }
@@ -123,10 +122,10 @@ int main () {
             y2 = y2+l;
             printf ("The dice roles %d\n", l);
 
-            int a = rand () % 90 + 1;
-            int b = rand () % 80 + 1;
-            int c = rand () % 70 + 1;
-            int d = rand () % 40 + 1;
+            int a = rand () % 50 + 1;
+            int b = rand () % 30 + 1;
+            int c = rand () % 40 + 1;
+            int d = rand () % 20 + 1;
 
             if (a>b) {
                 printf ("Snake exists between %d & %d\n", a, b);
@@ -181,7 +180,7 @@ int main () {
             break;
         }
 
-        if (y2==100) {
+        else if (y2==100) {
             printf ("Player 2 won!");
             break;
         }
