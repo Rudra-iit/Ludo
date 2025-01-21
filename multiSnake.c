@@ -57,10 +57,10 @@ int main () {
             y1 = y1+x;
             printf ("The dice roles %d\n", x);
 
-            int a = 6;//rand () % 90 + 1;
-            int b = 4;//rand () % 80 + 1;
-            int c = 8;//rand () % 70 + 1;
-            int d = 5;//rand () % 40 + 1;
+            int a = rand () % 90 + 1;
+            int b = rand () % 80 + 1;
+            int c = rand () % 70 + 1;
+            int d = rand () % 40 + 1;
 
             if (a>b) {
                 printf ("Snake exists between %d & %d\n", a, b);
@@ -123,10 +123,10 @@ int main () {
             y2 = y2+l;
             printf ("The dice roles %d\n", l);
 
-            int a = 6;//rand () % 90 + 1;
-            int b = 5;//rand () % 80 + 1;
-            int c = 8;//rand () % 70 + 1;
-            int d = 10;//rand () % 40 + 1;
+            int a = rand () % 90 + 1;
+            int b = rand () % 80 + 1;
+            int c = rand () % 70 + 1;
+            int d = rand () % 40 + 1;
 
             if (a>b) {
                 printf ("Snake exists between %d & %d\n", a, b);
