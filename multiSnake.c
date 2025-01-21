@@ -44,7 +44,7 @@ int main () {
 
     while (1) {
 
-        printf ("\n1st Role: ");
+        printf ("\nRed: ");
         scanf (" %c", &dice);
 
         if (dice!='y') {
@@ -110,7 +110,12 @@ int main () {
 
         }
 
-        printf ("\n2nd Role: ");
+        if (y1==100) {
+            printf ("Red won!");
+            break;
+        }
+
+        printf ("\nBlue: ");
         scanf (" %c", &dice);
         if (dice!='y') {
             printf ("Sorry, press 'y' to try again.\n");
@@ -175,13 +180,8 @@ int main () {
 
         }
 
-        if (y1==100) {
-            printf ("Player 1 won!");
-            break;
-        }
-
-        else if (y2==100) {
-            printf ("Player 2 won!");
+        if (y2==100) {
+            printf ("Blue won!");
             break;
         }
 
