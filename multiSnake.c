@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
+#include <conio.h>
 
 int board_1[10][10], board_2[10][10], snake[10][10], i, j;
 
@@ -45,13 +47,12 @@ int main () {
     while (1) {
 
         printf ("\nRed: ");
-        scanf (" %c", &dice);
 
-        if (dice!='y') {
-            printf ("Sorry, press 'y' to try again.\n");
-        }
+        clock_t start = clock ();
+        clock_t limit = 5 * CLOCKS_PER_SEC;
 
-        else {
+        while ((clock () - start) > limit) {
+            if (_kbhit ()) {
 
             int x = rand () % 5 + 1;
             y1 = y1+x;
@@ -100,8 +101,7 @@ int main () {
                     }
 
                 }
-            }
-
+            
             print (board_1);
 
             if (y1>100) {
@@ -113,6 +113,11 @@ int main () {
         if (y1==100) {
             printf ("Red won!");
             break;
+        }
+
+        return 0;
+
+            }
         }
 
         printf ("\nBlue: ");
