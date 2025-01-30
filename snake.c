@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
+#include <conio.h>
 
 int board[10][10], snake[10][10], i, j;
 
@@ -111,7 +113,7 @@ int main () {
             if (y>100) {
                 y=y-x;
             }
-
+        
         }
 
     }

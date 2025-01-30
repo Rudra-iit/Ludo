@@ -54,28 +54,31 @@ int main () {
         while ((clock () - start) > limit) {
             if (_kbhit ()) {
 
-            int x = rand () % 5 + 1;
-            y1 = y1+x;
-            printf ("The dice roles %d\n", x);
+                printf ("Role dice: ");
+                scanf (" %c", &dice);
 
-            int a = rand () % 40 + 1;
-            int b = rand () % 20 + 1;
-            int c = rand () % 45 + 1;
-            int d = rand () % 30 + 1;
+                int x = rand () % 5 + 1;
+                y1 = y1+x;
+                printf ("The dice roles %d\n", x);
 
-            if (a>b) {
-                printf ("Snake exists between %d & %d\n", a, b);
-            }
-            else {
-                printf ("Ladder exists between %d & %d\n", a, b);
-            }
+                int a = rand () % 40 + 1;
+                int b = rand () % 20 + 1;
+                int c = rand () % 45 + 1;
+                int d = rand () % 30 + 1;
 
-            if (c>d) {
-                printf ("Snake exists between %d & %d\n", c, d);
-            }
-            else {
-                printf ("Ladder exists between %d & %d\n", c, d);
-            }
+                if (a>b) {
+                    printf ("Snake exists between %d & %d\n", a, b);
+                }
+                else {
+                    printf ("Ladder exists between %d & %d\n", a, b);
+                }
+
+                if (c>d) {
+                    printf ("Snake exists between %d & %d\n", c, d);
+                }
+                else {
+                    printf ("Ladder exists between %d & %d\n", c, d);
+                }
 
             for (i=0; i<10; i++) {
                 for (j=0; j<10; j++) {
@@ -108,26 +111,22 @@ int main () {
                 y1=y1-x;
             }
 
-        }
+                }
 
-        if (y1==100) {
-            printf ("Red won!");
-            break;
-        }
-
-        return 0;
+                if (y1==100) {
+                    printf ("Red won!");
+                    break;
+                }
 
             }
         }
 
         printf ("\nBlue: ");
-        scanf (" %c", &dice);
-        if (dice!='y') {
-            printf ("Sorry, press 'y' to try again.\n");
-        }
+        while ((clock() - start) > limit) {
+        if (_kbhit()) {
 
-        else {
-
+            printf ("Role dice: ");
+            scanf (" %c", &dice);
             int l = rand () % 5 + 1;
             y2 = y2+l;
             printf ("The dice roles %d\n", l);
@@ -188,6 +187,7 @@ int main () {
         if (y2==100) {
             printf ("Blue won!");
             break;
+        }
         }
 
     }
