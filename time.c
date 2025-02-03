@@ -1,14 +1,45 @@
-#include <conio.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <conio.h>
 #include <time.h>
 
+int board[10][10], snake[10][10], i, j, w=0;
+
+void print (int board[10][10]) {
+    printf ("\n");
+    for (i=10-1; i>=0; i--) {
+        for (j=10-1; j>=0; j--) {
+            if (board[i][j]==100) {
+                printf ("%d ", board[i][j]);
+            }
+            else if (board[i][j]>=10 && board[i][j]<100) {
+                printf (" %d ", board[i][j]);
+            }
+            else {
+                printf ("  %d ", board[i][j]);
+            }
+        }
+        printf ("\n");
+    }
+}
+
 int main() {
-    int iterations = 10;
+
+    char dice;
+    for (i=10-1; i>=0; i--) {
+        for (j=10-1; j>=0; j--) {
+            snake[i][j] = i*10 + (j+1);
+        }
+    }
+    int y = 1;
+    int life = 10;
+
+    int k=0;
     int time_limit = 2; // Time limit in seconds
 
-    for (int i = 0; i < iterations; i++) {
+    while (1) {
         clock_t start_time = clock();
-        printf("Iteration %d: Please enter a character within %d seconds...\n", i + 1, time_limit);
+        printf("-\nRole %d: Please role dice within %d seconds...\n", k + 1, time_limit);
 
         int input_received = 0; // Flag to check if input is received
 
@@ -16,6 +47,36 @@ int main() {
             if (_kbhit()) { // Check if a key has been pressed
                 char c = getch(); // Capture the key press
                 printf("You entered: '%c'\n", c);
+                if (c=='y') {
+                    int x = rand() % 5 + 1;
+                    y = y+x;
+
+                    printf ("Dice roled: %d\n", x);
+
+                    for (i=0; i<10; i++) {
+                        for (j=0; j<10; j++) {
+                            board[i][j] = snake[i][j];
+
+                            if (y==snake[i][j]) {
+                                board[i][j] = 0;
+                            }
+                        }
+                    }
+
+                    print (board);
+
+                    if (y==100) {
+                        w=1;
+                    }
+
+                    if (y>100) {
+                        y = y-x;
+                    }
+                    
+                }
+                else {
+                    printf ("Try again.\n");
+                }
                 input_received = 1;
                 break; // Exit the loop if a key is pressed
             }
@@ -23,7 +84,21 @@ int main() {
 
         if (!input_received) {
             printf("No input received on this iteration.\n");
+            life--;
+            printf ("Life is %d\n", life);
         }
+
+        if (life==0) {
+            printf ("Game over.\n");
+            break;
+        }
+
+        if (w==1) {
+            printf ("Game completed.\n");
+            break;
+        }
+        k++;
+
     }
 
     return 0;
