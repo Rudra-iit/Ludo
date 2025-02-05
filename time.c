@@ -6,26 +6,34 @@
 int board[10][10], snake[10][10], i, j, w=0;
 
 void print (int board[10][10]) {
+
     printf ("\n");
+
     for (i=10-1; i>=0; i--) {
         for (j=10-1; j>=0; j--) {
+
             if (board[i][j]==100) {
                 printf ("%d ", board[i][j]);
             }
+
             else if (board[i][j]>=10 && board[i][j]<100) {
                 printf (" %d ", board[i][j]);
             }
+
             else {
                 printf ("  %d ", board[i][j]);
             }
+
         }
+
         printf ("\n");
     }
 }
 
 int main() {
 
-    char dice;
+    // A second matrix with fixed values to compare with
+
     for (i=10-1; i>=0; i--) {
         for (j=10-1; j>=0; j--) {
             snake[i][j] = i*10 + (j+1);
@@ -38,21 +46,27 @@ int main() {
     int time_limit = 2; // Time limit in seconds
 
     while (1) {
+
         clock_t start_time = clock();
+
         printf("-\nRole %d: Please role dice within %d seconds...\n", k + 1, time_limit);
 
         int input_received = 0; // Flag to check if input is received
 
         while ((clock() - start_time) / CLOCKS_PER_SEC < time_limit) {
+
             if (_kbhit()) { // Check if a key has been pressed
+
                 char c = getch(); // Capture the key press
                 printf("You entered: '%c'\n", c);
+
                 if (c=='y') {
                     int x = rand() % 5 + 1;
                     y = y+x;
 
                     printf ("Dice roled: %d\n", x);
 
+                    // Random numbers as snake or ladder
                     int a = rand() % 90 + 1;
                     int b = rand() % 50 + 1;
 
@@ -67,13 +81,16 @@ int main() {
                     for (i=0; i<10; i++) {
                         for (j=0; j<10; j++) {
                             board[i][j] = snake[i][j];
-
+                            
+                            // When snake/ladder comes on the way
                             if (y==a) {
                                 if (snake[i][j] == b) {
                                     board[i][j] = 0;
                                     y = b;
                                 }
                             }
+
+                            // When they don't
                             else if (y==snake[i][j]) {
                                 board[i][j] = 0;
                             }
@@ -81,11 +98,13 @@ int main() {
                     }
 
                     print (board);
-
+                    
+                    // Check when the game's ending
                     if (y==100) {
                         w=1;
                     }
-
+                    
+                    // If the dice count goes out of 100 without the game finishing
                     if (y>100) {
                         y = y-x;
                     }
@@ -96,23 +115,34 @@ int main() {
                 }
                 input_received = 1;
                 break; // Exit the loop if a key is pressed
+
             }
+
         }
 
         if (!input_received) {
+
+            // Not timely input: life lost
             printf("No input received on this iteration.\n");
             life--;
             printf ("Life is %d\n", life);
+
         }
 
         if (life==0) {
+
+            // Disqualified
             printf ("Game over.\n");
             break;
+
         }
 
         if (w==1) {
+
+            // Finish the game
             printf ("Game completed.\n");
             break;
+
         }
         k++;
 
