@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <conio.h>
 #include <time.h>
+#include <unistd.h>
 
 int board[10][10], snake[10][10], i, j, w=0;
 
