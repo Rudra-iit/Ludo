@@ -1,13 +1,55 @@
 #include <winsock2.h>
 #include <iostream>
+#include <stdlib.h>
+#include <conio.h>
+#include <time.h>
 
 #pragma comment(lib, "ws2_32.lib")
 
+int board[10][10], snake[10][10], i, j, w=0, q=0;
+
+
+void print (int board[10][10]) {
+
+    printf ("\n");
+
+    for (i=10-1; i>=0; i--) {
+
+        for (j=10-1; j>=0; j--) {
+
+            if (board[i][j]==100) {
+                printf ("%d ", board[i][j]);
+            }
+
+            else if (board[i][j]>=10 && board[i][j]<100) {
+                printf (" %d ", board[i][j]);
+            }
+
+            else {
+                printf ("  %d ", board[i][j]);
+            }
+
+        }
+
+        printf ("\n");
+
+    }
+
+}
+
 int main() {
+    for (i=10-1; i>=0; i--) {
+        for (j=10-1; j>=0; j--) {
+            snake[i][j] = i*10 + (j+1);
+        }
+    }
+
+    int y = 0;
+
     WSADATA wsa;
     SOCKET serverSocket, clientSocket;
     struct sockaddr_in server, client;
-    char buffer[256];
+    char buffer[1024];
     fd_set readfds;
     struct timeval timeout;
 
@@ -44,6 +86,16 @@ int main() {
             recv(clientSocket, buffer, sizeof(buffer), 0);
             int clientNumber = atoi(buffer);
             std::cout << "Received from client: " << clientNumber << std::endl;
+            y = y+clientNumber;
+            for (i=0; i<10; i++) {
+                for (j=0; j<10; j++) {
+                    board[i][j] = snake[i][j];
+                    if (y==snake[i][j]) {
+                        board[i][j] = 0;
+                    }
+                }
+            }
+            print (board);
         } else {
             // Timeout or error, proceed to print server's own input
             std::cout << "Client did not respond in time, printing server's own input: " << i << std::endl;

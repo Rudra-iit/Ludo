@@ -43,11 +43,13 @@ int main() {
             snake[i][j] = i*10 + (j+1);
         }
     }
-    
+
+    int y = 0;
+
     WSADATA wsa;
     SOCKET sock;
     struct sockaddr_in server;
-    char buffer[256];
+    char buffer[1024];
 
     // Initialize Winsock
     WSAStartup(MAKEWORD(2, 2), &wsa);
@@ -75,6 +77,15 @@ int main() {
         recv(sock, buffer, sizeof(buffer), 0);
         int serverNumber = atoi(buffer);
         std::cout << "Received from server: " << serverNumber << std::endl;
+        for (i=0; i<10; i++) {
+            for (j=0; j<10; j++) {
+                board[i][j] = snake[i][j];
+                if (y==serverNumber) {
+                    board[i][j] = 0;
+                }
+            }
+        }
+        print (board);
     }
 
     closesocket(sock);
