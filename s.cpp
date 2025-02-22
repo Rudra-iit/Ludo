@@ -70,7 +70,7 @@ int main() {
     int c = sizeof(struct sockaddr_in);
     clientSocket = accept(serverSocket, (struct sockaddr*)&client, &c);
 
-    for (int i = 0; i < 10; ++i) {
+    while (1) {
         // Set up the file descriptor set
         FD_ZERO(&readfds);
         FD_SET(clientSocket, &readfds);
@@ -99,6 +99,9 @@ int main() {
         } else {
             // Timeout or error, proceed to print server's own input
             std::cout << "Client did not respond in time, printing server's own input: " << i << std::endl;
+            w++;
+            sprintf (buffer, "%d", w);
+            send (clientSocket, buffer, sizeof(buffer), 0);
         }
 
         // Wait for next client response
@@ -109,6 +112,19 @@ int main() {
         // Send data to client
         sprintf(buffer, "%d", serverNumber);
         send(clientSocket, buffer, sizeof(buffer), 0);
+
+        if (y == 100) {
+            break;
+        }
+
+        if (y>100) {
+            y = y - 10;
+        }
+
+        if (w==5) {
+            printf ("You won!\n");
+            break;
+        }
     }
 
     closesocket(clientSocket);

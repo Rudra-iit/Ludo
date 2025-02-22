@@ -63,7 +63,7 @@ int main() {
     // Connect to server
     connect(sock, (struct sockaddr*)&server, sizeof(server));
 
-    for (int i = 0; i < 10; ++i) {
+    while (1) {
         // Get user input
         int clientNumber;
         std::cout << "Enter a number to send to server: ";
@@ -86,6 +86,22 @@ int main() {
             }
         }
         print (board);
+
+        recv (sock, buffer, sizeof(buffer), 0);
+        int w = atoi (buffer);
+        printf (" %d\n", w);
+
+        if (y==100) {
+            break;
+        }
+
+        if (y>100) {
+            y=y-10;
+        }
+
+        if (w==5) {
+            break;
+        }
     }
 
     closesocket(sock);
