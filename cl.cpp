@@ -3,6 +3,8 @@
 
 #pragma comment(lib, "ws2_32.lib")
 
+int i, j, num, received;
+
 int main() {
     WSADATA wsaData;
     SOCKET clientSocket;
@@ -25,7 +27,7 @@ int main() {
 
     // Connect to the server
     serverAddr.sin_family = AF_INET;
-    serverAddr.sin_addr.s_addr = inet_addr("10.100.201.119"); // Server IP address
+    serverAddr.sin_addr.s_addr = inet_addr("10.100.201.75"); // Server IP address
     serverAddr.sin_port = htons(8080);
     if (connect(clientSocket, (sockaddr*)&serverAddr, sizeof(serverAddr)) == SOCKET_ERROR) {
         int error = WSAGetLastError ();
