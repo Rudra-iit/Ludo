@@ -45,6 +45,8 @@ int main() {
     }
 
     int y = 0;
+    int yy = 0;
+    int yyy = 0;
 
     WSADATA wsa;
     SOCKET sock;
@@ -79,39 +81,77 @@ int main() {
         std::cout << "Enter a number to send to server: ";
         std::cin >> clientNumber;
 
+        for (i=0; i<10; i++) {
+            for (j=0; j<10; j++) {
+                board[i][j] = snake[i][j];
+                if (y==snake[i][j]) {
+                    board[i][j] = 0;
+                }
+            }
+        }
+        printf ("You are:\n");
+        print (board);
+
         // Send data to server
         sprintf(buffer, "%d", clientNumber);
         send(sock, buffer, sizeof(buffer), 0);
+
+        sprintf (buffer, "%d", y);
+        send (sock, buffer, sizeof(buffer), 0);
         
         if (activity > 0 && FD_ISSET(sock, &readfds)) {
             // Receive data from server
             recv(sock, buffer, sizeof(buffer), 0);
-            int serverNumber = atoi(buffer);
-            std::cout << "Received from server: " << serverNumber << std::endl;
+            int w = atoi(buffer);
+            std::cout << "Received from client 1: " << w << std::endl;
             for (i=0; i<10; i++) {
                 for (j=0; j<10; j++) {
                     board[i][j] = snake[i][j];
-                    if (y==serverNumber) {
+                    if (yyy==w) {
                         board[i][j] = 0;
                     }
                 }
             }
+            printf ("Client 1 is:\n");
+            print (board);
+        
+            recv (sock, buffer, sizeof(buffer), 0);
+            int serverNumber = atoi (buffer);
+            std::cout << "Received from server: " << serverNumber << std::endl;
+            for (i=0; i<10; i++) {
+                for (j=0; j<10; j++) {
+                    board[i][j] = snake[i][j];
+                    if (yy==serverNumber) {
+                        board[i][j] = 0;
+                    }
+                }
+            }
+            printf ("Server is:\n");
             print (board);
         }
         recv (sock, buffer, sizeof(buffer), 0);
-        int w = atoi (buffer);
-        printf (" %d\n", w);
+        int abc = atoi (buffer);
+
+        recv (sock, buffer, sizeof(buffer), 0);
+        int xyz = atoi (buffer);
+
+        if (abc==100) {
+            printf ("Server won!\n");
+            break;
+        }
+
+        if (xyz==100) {
+            printf ("Client 1 won!\n");
+            break;
+        }
 
         if (y==100) {
+            printf ("You won!\n");
             break;
         }
 
         if (y>100) {
             y=y-10;
-        }
-
-        if (w==5) {
-            break;
         }
     }
 

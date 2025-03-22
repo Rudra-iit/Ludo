@@ -56,6 +56,7 @@ int main() {
 
     int y = 0;
     int yy = 0;
+    int yyy = 0;
     WSADATA wsa;
     SOCKET server1, server2, client1, client2;
     struct sockaddr_in server1_addr, server2_addr, client1_addr, client2_addr;
@@ -94,15 +95,14 @@ int main() {
         // Set up the file descriptor set
         FD_ZERO(&readfds);
         FD_SET(client1, &readfds);
-        FD_SET(client2, &readfds);
 
         // Set up the timeout struct
         timeout.tv_sec = 5;  // 5 seconds timeout
         timeout.tv_usec = 0;
 
-        int activity = select(0, &readfds, NULL, NULL, &timeout);
+        int activity1 = select(0, &readfds, NULL, NULL, &timeout);
 
-        if (activity > 0 && FD_ISSET(client1, &readfds)) {
+        if (activity1 > 0 && FD_ISSET(client1, &readfds)) {
             // Data is available to be read from the client
             recv(client1, buffer, sizeof(buffer), 0);
             int clientNumber = atoi(buffer);
@@ -116,7 +116,10 @@ int main() {
                     }
                 }
             }
+            printf ("Client 1 is:\n");
             print (board);
+            sprintf (buffer, "%d", clientNumber);
+            send (client2, buffer, sizeof (buffer), 0);
         }
         else {
             // Timeout or error
@@ -126,7 +129,11 @@ int main() {
             send (client1, buffer, sizeof(buffer), 0);
         }
 
-        if (activity > 0 && FD_ISSET (client2, &readfds)) {
+        FD_ZERO (&readfds);
+        FD_SET(client2, &readfds);
+        int activity2 = select(0, &readfds, NULL, NULL, &timeout);
+
+        if (activity2 > 0 && FD_ISSET (client2, &readfds)) {
             recv(client2, buffer, sizeof(buffer), 0);
             int newNumber = atoi (buffer);
             std:: cout << "Received from client 2: " << newNumber << std:: endl;
@@ -141,7 +148,10 @@ int main() {
                     }
                 }
             }
+            printf ("Client 2 is:\n");
             print (board);
+            sprintf (buffer, "%d", newNumber);
+            send (client1, buffer, sizeof(buffer), 0);
         }
 
         else {
@@ -160,23 +170,58 @@ int main() {
         sprintf(buffer, "%d", serverNumber);
         send(client1, buffer, sizeof(buffer), 0);
         send(client2, buffer, sizeof(buffer), 0);
+        
+        yyy = yyy + serverNumber;
 
-        if (y == 100) {
+        for (i=0; i<10; i++) {
+            for (j=0; j<10; j++) {
+                board[i][j] = snake[i][j];
+                if (yyy == snake[i][j]) {
+                    board[i][j] = 0;
+                }
+            }
+        }
+        printf ("You are:\n");
+        print (board);
+        sprintf (buffer, "%d", yyy);
+        send(client1, buffer, sizeof(buffer), 0);
+        send(client2, buffer, sizeof(buffer), 0);
+        
+        recv (client1, buffer, sizeof(buffer), 0);
+        int abc = atoi (buffer);
+        sprintf (buffer, "%d", abc);
+        send (client2, buffer, sizeof(buffer), 0);
+
+
+        recv (client2, buffer, sizeof(buffer), 0);
+        int xyz = atoi (buffer);
+        sprintf (buffer, "%d", xyz);
+        send (client1, buffer, sizeof(buffer), 0);
+
+        if (xyz == 100) {
+            printf ("Client 2 won!\n");
             break;
         }
 
-        if (y>100) {
-            y = y - 10;
+        if (abc == 100) {
+            printf ("Client 1 won!\n");
+            break;
         }
 
-        if (w==5) {
+        if (yyy == 100) {
             printf ("You won!\n");
             break;
+        }
+
+        if (yyy>100) {
+            yyy = yyy - 10;
         }
     }
 
     closesocket(client1);
     closesocket(server1);
+    closesocket(client2);
+    closesocket(server2);
     WSACleanup();
 
     return 0;
