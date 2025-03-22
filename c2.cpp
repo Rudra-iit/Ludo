@@ -50,6 +50,8 @@ int main() {
     SOCKET sock;
     struct sockaddr_in server;
     char buffer[1024];
+    struct timeval timeout;
+    fd_set readfds;
 
     // Initialize Winsock
     WSAStartup(MAKEWORD(2, 2), &wsa);
@@ -58,12 +60,20 @@ int main() {
     sock = socket(AF_INET, SOCK_STREAM, 0);
     server.sin_family = AF_INET;
     server.sin_addr.s_addr = inet_addr("127.0.0.1");
-    server.sin_port = htons(8888);
+    server.sin_port = htons(8080);
 
     // Connect to server
     connect(sock, (struct sockaddr*)&server, sizeof(server));
 
     while (1) {
+        FD_ZERO(&readfds);
+        FD_SET(sock, &readfds);
+
+        timeout.tv_sec = 5;
+        timeout.tv_usec = 0;
+
+        int activity = select(0, &readfds, NULL, NULL, &timeout);
+
         // Get user input
         int clientNumber;
         std::cout << "Enter a number to send to server: ";
@@ -72,21 +82,22 @@ int main() {
         // Send data to server
         sprintf(buffer, "%d", clientNumber);
         send(sock, buffer, sizeof(buffer), 0);
-
-        // Receive data from server
-        recv(sock, buffer, sizeof(buffer), 0);
-        int serverNumber = atoi(buffer);
-        std::cout << "Received from server: " << serverNumber << std::endl;
-        for (i=0; i<10; i++) {
-            for (j=0; j<10; j++) {
-                board[i][j] = snake[i][j];
-                if (y==serverNumber) {
-                    board[i][j] = 0;
+        
+        if (activity > 0 && FD_ISSET(sock, &readfds)) {
+            // Receive data from server
+            recv(sock, buffer, sizeof(buffer), 0);
+            int serverNumber = atoi(buffer);
+            std::cout << "Received from server: " << serverNumber << std::endl;
+            for (i=0; i<10; i++) {
+                for (j=0; j<10; j++) {
+                    board[i][j] = snake[i][j];
+                    if (y==serverNumber) {
+                        board[i][j] = 0;
+                    }
                 }
             }
+            print (board);
         }
-        print (board);
-
         recv (sock, buffer, sizeof(buffer), 0);
         int w = atoi (buffer);
         printf (" %d\n", w);

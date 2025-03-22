@@ -6,7 +6,17 @@
 
 #pragma comment(lib, "ws2_32.lib")
 
-int board[10][10], snake[10][10], i, j, w=0, q=0;
+int board[10][10], snake[10][10], i, j, w=0, q=0, p=0;
+
+int s1[4] = {3, 8, 17, 26};
+int s2[4] = {10, 29, 36, 40};
+int s3[4] = {50, 55, 60, 64};
+int s4[4] = {72, 88, 90, 93};
+
+int l1[4] = {6, 12, 18, 24};
+int l2[4] = {30, 44, 57, 70};
+int l3[4] = {67, 77, 80, 81};
+int l4[4] = {31, 71, 89, 97};
 
 
 void print (int board[10][10]) {
@@ -45,35 +55,46 @@ int main() {
     }
 
     int y = 0;
-
+    int yy = 0;
     WSADATA wsa;
-    SOCKET serverSocket, clientSocket;
-    struct sockaddr_in server, client;
+    SOCKET server1, server2, client1, client2;
+    struct sockaddr_in server1_addr, server2_addr, client1_addr, client2_addr;
     char buffer[1024];
+    int opt = 1;
+    int addrlen = sizeof(struct sockaddr_in);
     fd_set readfds;
     struct timeval timeout;
 
     // Initialize Winsock
     WSAStartup(MAKEWORD(2, 2), &wsa);
 
-    // Create socket
-    serverSocket = socket(AF_INET, SOCK_STREAM, 0);
-    server.sin_family = AF_INET;
-    server.sin_addr.s_addr = INADDR_ANY;
-    server.sin_port = htons(8888);
+    // Create first socket
+    server1 = socket(AF_INET, SOCK_STREAM, 0);
+    setsockopt(server1, SOL_SOCKET, SO_REUSEADDR, (char *)&opt, sizeof(opt));
+    server1_addr.sin_family = AF_INET;
+    server1_addr.sin_addr.s_addr = INADDR_ANY;
+    server1_addr.sin_port = htons(8888);
+    bind(server1, (struct sockaddr *)&server1_addr, sizeof(server1_addr));
+    listen(server1, 3);
 
-    // Bind socket
-    bind(serverSocket, (struct sockaddr*)&server, sizeof(server));
-    listen(serverSocket, 3);
+    // Create second socket
+    server2 = socket(AF_INET, SOCK_STREAM, 0);
+    setsockopt(server2, SOL_SOCKET, SO_REUSEADDR, (char *)&opt, sizeof(opt));
+    server2_addr.sin_family = AF_INET;
+    server2_addr.sin_addr.s_addr = INADDR_ANY;
+    server2_addr.sin_port = htons(8080);
+    bind(server2, (struct sockaddr *)&server2_addr, sizeof(server2_addr));
+    listen(server2, 5);
 
-    // Accept incoming connection
-    int c = sizeof(struct sockaddr_in);
-    clientSocket = accept(serverSocket, (struct sockaddr*)&client, &c);
+    // Accept incoming connections
+    client1 = accept(server1, (struct sockaddr *)&client1_addr, &addrlen);
+    client2 = accept(server2, (struct sockaddr *)&client2_addr, &addrlen);
 
     while (1) {
         // Set up the file descriptor set
         FD_ZERO(&readfds);
-        FD_SET(clientSocket, &readfds);
+        FD_SET(client1, &readfds);
+        FD_SET(client2, &readfds);
 
         // Set up the timeout struct
         timeout.tv_sec = 5;  // 5 seconds timeout
@@ -81,11 +102,11 @@ int main() {
 
         int activity = select(0, &readfds, NULL, NULL, &timeout);
 
-        if (activity > 0 && FD_ISSET(clientSocket, &readfds)) {
+        if (activity > 0 && FD_ISSET(client1, &readfds)) {
             // Data is available to be read from the client
-            recv(clientSocket, buffer, sizeof(buffer), 0);
+            recv(client1, buffer, sizeof(buffer), 0);
             int clientNumber = atoi(buffer);
-            std::cout << "Received from client: " << clientNumber << std::endl;
+            std::cout << "Received from client 1: " << clientNumber << std::endl;
             y = y+clientNumber;
             for (i=0; i<10; i++) {
                 for (j=0; j<10; j++) {
@@ -96,12 +117,38 @@ int main() {
                 }
             }
             print (board);
-        } else {
-            // Timeout or error, proceed to print server's own input
-            std::cout << "Client did not respond in time, printing server's own input: " << i << std::endl;
+        }
+        else {
+            // Timeout or error
+            std::cout << "Client 1 did not respond in time" << i << std::endl;
             w++;
             sprintf (buffer, "%d", w);
-            send (clientSocket, buffer, sizeof(buffer), 0);
+            send (client1, buffer, sizeof(buffer), 0);
+        }
+
+        if (activity > 0 && FD_ISSET (client2, &readfds)) {
+            recv(client2, buffer, sizeof(buffer), 0);
+            int newNumber = atoi (buffer);
+            std:: cout << "Received from client 2: " << newNumber << std:: endl;
+
+            yy = yy + newNumber;
+
+            for (i=0; i<10; i++) {
+                for (j=0; i<10; i++) {
+                    board[i][j] = snake[i][j];
+                    if (y==snake[i][j]) {
+                        board[i][j] = 0;
+                    }
+                }
+            }
+            print (board);
+        }
+
+        else {
+            std::cout << "Client 2 did not respond in time" << i << std::endl;
+            p++;
+            sprintf (buffer, "%d", p);
+            send (client2, buffer, sizeof(buffer), 0);
         }
 
         // Wait for next client response
@@ -111,7 +158,8 @@ int main() {
 
         // Send data to client
         sprintf(buffer, "%d", serverNumber);
-        send(clientSocket, buffer, sizeof(buffer), 0);
+        send(client1, buffer, sizeof(buffer), 0);
+        send(client2, buffer, sizeof(buffer), 0);
 
         if (y == 100) {
             break;
@@ -127,8 +175,8 @@ int main() {
         }
     }
 
-    closesocket(clientSocket);
-    closesocket(serverSocket);
+    closesocket(client1);
+    closesocket(server1);
     WSACleanup();
 
     return 0;
