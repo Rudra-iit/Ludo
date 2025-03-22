@@ -4,10 +4,11 @@
 #include <stdlib.h>
 #include <conio.h>
 #include <time.h>
+#include <unistd.h>
 
 #pragma comment(lib, "ws2_32.lib")
 
-int board[10][10], snake[10][10], i, j, w=0, q=0;
+int board[10][10], snake[10][10], i, j, w=0, q=0, p=0, d=0;
 
 void print (int board[10][10]) {
 
@@ -47,6 +48,7 @@ int main() {
     int y = 0;
     int yy = 0;
     int yyy = 0;
+    int time = 5;
 
     WSADATA wsa;
     SOCKET sock;
@@ -73,13 +75,22 @@ int main() {
 
         timeout.tv_sec = 5;
         timeout.tv_usec = 0;
-
         int activity = select(0, &readfds, NULL, NULL, &timeout);
 
         // Get user input
         int clientNumber;
         std::cout << "Enter a number to send to server: ";
-        std::cin >> clientNumber;
+        clock_t start_time = clock();
+
+        while ((clock() - start_time)/ CLOCKS_PER_SEC < time) {
+            if (kbhit()) {
+                char c = getch ();
+                std::cin >> clientNumber;
+
+            }
+        }
+
+        y = y+clientNumber;
 
         for (i=0; i<10; i++) {
             for (j=0; j<10; j++) {
@@ -103,25 +114,40 @@ int main() {
             // Receive data from server
             recv(sock, buffer, sizeof(buffer), 0);
             int w = atoi(buffer);
+            yyy = yyy + w;
             std::cout << "Received from client 2: " << w << std::endl;
             for (i=0; i<10; i++) {
                 for (j=0; j<10; j++) {
                     board[i][j] = snake[i][j];
-                    if (yyy==w) {
+                    if (yyy==snake[i][j]) {
                         board[i][j] = 0;
                     }
                 }
-            }
+            }    
             printf ("Client 2 is:\n");
             print (board);
+        }
+
+        else {
+            printf ("Client 2 didn't respond in time.\n");
+            q++;
+            sprintf (buffer, "%d", q);
+            send (sock, buffer, sizeof (buffer), 0);
+        }
         
+        FD_ZERO(&readfds);
+        FD_SET(sock, &readfds);
+        int active = select(0, &readfds, NULL, NULL, &timeout);
+
+        if (active >0 && FD_ISSET(sock, &readfds)) {
             recv (sock, buffer, sizeof(buffer), 0);
             int serverNumber = atoi (buffer);
+            yy = yy + serverNumber;
             std::cout << "Received from server: " << serverNumber << std::endl;
             for (i=0; i<10; i++) {
                 for (j=0; j<10; j++) {
                     board[i][j] = snake[i][j];
-                    if (yy==serverNumber) {
+                    if (yy==snake[i][j]) {
                         board[i][j] = 0;
                     }
                 }
@@ -129,6 +155,14 @@ int main() {
             printf ("Server is:\n");
             print (board);
         }
+
+        else {
+            printf ("Server didn't respond in time.\n");
+            p++;
+            sprintf (buffer, "%d", p);
+            send (sock, buffer, sizeof (buffer), 0);
+        }
+
         recv (sock, buffer, sizeof(buffer), 0);
         int abc = atoi (buffer);
 

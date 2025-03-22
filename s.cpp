@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <conio.h>
 #include <time.h>
+#include <unistd.h>
+#include <stdio.h>
 
 #pragma comment(lib, "ws2_32.lib")
 
@@ -53,6 +55,7 @@ int main() {
             snake[i][j] = i*10 + (j+1);
         }
     }
+    int time = 5;
 
     int y = 0;
     int yy = 0;
@@ -99,7 +102,7 @@ int main() {
         // Set up the timeout struct
         timeout.tv_sec = 5;  // 5 seconds timeout
         timeout.tv_usec = 0;
-
+        
         int activity1 = select(0, &readfds, NULL, NULL, &timeout);
 
         if (activity1 > 0 && FD_ISSET(client1, &readfds)) {
@@ -120,6 +123,8 @@ int main() {
             print (board);
             sprintf (buffer, "%d", clientNumber);
             send (client2, buffer, sizeof (buffer), 0);
+            sprintf (buffer, "%d", w);
+            send (client1, buffer, sizeof (buffer), 0);
         }
         else {
             // Timeout or error
@@ -152,6 +157,8 @@ int main() {
             print (board);
             sprintf (buffer, "%d", newNumber);
             send (client1, buffer, sizeof(buffer), 0);
+            sprintf (buffer, "%d", p);
+            send (client2, buffer, sizeof (buffer), 0);
         }
 
         else {
@@ -162,9 +169,17 @@ int main() {
         }
 
         // Wait for next client response
-        std::cout << "Enter a number to send to client: ";
         int serverNumber;
-        std::cin >> serverNumber;
+        std::cout << "Enter a number to send to client: ";
+        clock_t start_time = clock();
+
+        while ((clock() - start_time)/ CLOCKS_PER_SEC < time) {
+            if (kbhit()) {
+                char c = getch ();
+                std::cin >> serverNumber;
+
+            }
+        }
 
         // Send data to client
         sprintf(buffer, "%d", serverNumber);
@@ -186,6 +201,7 @@ int main() {
         sprintf (buffer, "%d", yyy);
         send(client1, buffer, sizeof(buffer), 0);
         send(client2, buffer, sizeof(buffer), 0);
+
         
         recv (client1, buffer, sizeof(buffer), 0);
         int abc = atoi (buffer);
@@ -219,8 +235,8 @@ int main() {
     }
 
     closesocket(client1);
-    closesocket(server1);
     closesocket(client2);
+    closesocket(server1);
     closesocket(server2);
     WSACleanup();
 
