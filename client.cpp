@@ -262,7 +262,7 @@ int main() {
             // Not timely input: life lost
             printf("No input received on this iteration.\n");
             life--;
-            printf ("Life is %d\n", life);
+            printf ("Life is %d\n-\n", life);
 
             send (clientSocket, (char*)&y, sizeof (y), 0);
             send (clientSocket, (char*)&life, sizeof (life), 0);
@@ -275,7 +275,7 @@ int main() {
         recv(clientSocket, (char*)&a, sizeof(a), 0);
         recv(clientSocket, (char*)&b, sizeof(b), 0);
 
-        printf ("This player's position is %d & life is %d\n", a, b);
+        printf ("This player's position is %d & life is %d\n-\n", a, b);
 
         printf ("Next player is rolling...\n");
 
@@ -284,7 +284,7 @@ int main() {
         recv(clientSocket, (char*)&c, sizeof(c), 0);
         recv(clientSocket, (char*)&d, sizeof(d), 0);
 
-        printf ("This player's position is %d & life is %d\n", c, d);
+        printf ("This player's position is %d & life is %d\n-\n", c, d);
 
         printf ("Next player is rolling...\n");
 
@@ -293,9 +293,9 @@ int main() {
         recv(clientSocket, (char*)&f, sizeof(f), 0);
 
 
-        printf ("This player's position is %d & life is %d\n", e, f);
+        printf ("This player's position is %d & life is %d\n-\n", e, f);
 
-        printf ("Your turn.\n");
+        printf ("\nYour turn.\n");
         
 
         if (life == 0 || a == 100 || c == 100 || e == 100) {

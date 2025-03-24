@@ -239,26 +239,28 @@ int multiplayer () {
 
         }
 
+        // if one client quits
 
         if (y==0) {
 
             closesocket(client[0]);
         }
 
-
+        // if second client quits
 
         if (b==0) {
 
             closesocket(client[1]);
         }
 
-
+        // if another client quits
 
         if (d==0) {
 
             closesocket(client[2]);
         }
 
+        // if another client quits
 
         if (f==0) {
 
