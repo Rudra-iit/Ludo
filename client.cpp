@@ -65,6 +65,22 @@ void print (int board[10][10]) {
 }
 
 
+void printTheEnd () {
+    
+
+    printf ("\n");
+
+    printf ("####  ##    #  ##");
+    printf ("#     # #   #  # #");
+    printf ("###   #  #  #  #  #");
+    printf ("#     #   # #  # #");
+    printf ("####  #    ##  ##");
+
+    printf ("\n");
+
+
+}
+
 
 void logo () {
     
@@ -91,6 +107,7 @@ int main() {
     printf ("Welcome!\n");
 
     logo ();
+
 
     for (i=10-1; i>=0; i--) {
         for (j=10-1; j>=0; j--) {
@@ -147,6 +164,55 @@ int main() {
     } */
 
     printf ("Welcome!\n");
+
+    printf ("Please enter your name: ");
+
+    
+    const char* name;
+    scanf ("%s", name);
+
+    send(clientSocket, name, strlen(name) + 1, 0);
+
+
+    // preparing to get the names of other players
+    // get the 2nd
+
+    char receivedName[256];
+
+    int bytesReceived = recv(clientSocket, receivedName, sizeof(receivedName), 0);
+
+    if (bytesReceived > 0) {
+
+        receivedName[bytesReceived] = '\0';  // Null-terminate the string
+        
+    }
+
+
+    // get the 3rd
+
+    char receivedName1[256];
+
+    int bytesReceived1 = recv(clientSocket, receivedName1, sizeof(receivedName1), 0);
+
+    if (bytesReceived1 > 0) {
+
+        receivedName1[bytesReceived1] = '\0';  // Null-terminate the string
+        
+    }
+
+    
+    // get the 4th
+
+    char receivedName2[256];
+
+    int bytesReceived2 = recv(clientSocket, receivedName2, sizeof(receivedName2), 0);
+
+    if (bytesReceived2 > 0) {
+
+        receivedName2[bytesReceived2] = '\0';  // Null-terminate the string
+        
+    }
+
 
 
     while (1) {
@@ -275,7 +341,7 @@ int main() {
         recv(clientSocket, (char*)&a, sizeof(a), 0);
         recv(clientSocket, (char*)&b, sizeof(b), 0);
 
-        printf ("This player's position is %d & life is %d\n-\n", a, b);
+        cout << receivedName << "'s position is " << a << " & life is " << b << "\n-\n";
 
         printf ("Next player is rolling...\n");
 
@@ -284,7 +350,7 @@ int main() {
         recv(clientSocket, (char*)&c, sizeof(c), 0);
         recv(clientSocket, (char*)&d, sizeof(d), 0);
 
-        printf ("This player's position is %d & life is %d\n-\n", c, d);
+        cout << receivedName1 << "'s position is " << c << " & life is " << d << "\n-\n";
 
         printf ("Next player is rolling...\n");
 
@@ -293,7 +359,7 @@ int main() {
         recv(clientSocket, (char*)&f, sizeof(f), 0);
 
 
-        printf ("This player's position is %d & life is %d\n-\n", e, f);
+        cout << receivedName2 << "'s position is " << e << " & life is " << e << "\n-\n";
 
         printf ("\nYour turn.\n");
         
@@ -341,7 +407,13 @@ int main() {
     */
 
     // Clean up
+    
+
+    printTheEnd ();
+
     closesocket(clientSocket);
     WSACleanup();
+
     return 0;
+
 }

@@ -83,6 +83,22 @@ void print (int board[10][10]) {
 }
 
 
+void printTheEnd () {
+    
+
+    printf ("\n");
+
+    printf ("####  ##    #  ##");
+    printf ("#     # #   #  # #");
+    printf ("###   #  #  #  #  #");
+    printf ("#     #   # #  # #");
+    printf ("####  #    ##  ##");
+
+    printf ("\n");
+
+
+}
+
 struct ClientData {
  int sum;
  int id;
@@ -150,6 +166,91 @@ int multiplayer () {
 
                clientNum ++;
         }    
+
+
+        // getting the 1st player's name
+
+        char receivedName[256];
+    
+        int bytesReceived = recv(client[0], receivedName, sizeof(receivedName), 0);
+    
+        if (bytesReceived > 0) {
+    
+            receivedName[bytesReceived] = '\0';  // Null-terminate the string
+            
+        }
+
+        // sending to other three
+
+        send(client[1], receivedName, strlen(receivedName) + 1, 0);
+        send(client[2], receivedName, strlen(receivedName) + 1, 0);
+        send(client[3], receivedName, strlen(receivedName) + 1, 0);
+
+
+
+
+
+        // getting the 2nd player's name
+
+        char receivedName1[256];
+    
+        int bytesReceived1 = recv(client[1], receivedName1, sizeof(receivedName1), 0);
+    
+        if (bytesReceived1 > 0) {
+    
+            receivedName1[bytesReceived1] = '\0';  // Null-terminate the string
+            
+        }
+
+        // sending to other three
+
+        send(client[0], receivedName, strlen(receivedName) + 1, 0);
+        send(client[2], receivedName, strlen(receivedName) + 1, 0);
+        send(client[3], receivedName, strlen(receivedName) + 1, 0);
+
+
+
+
+        // getting the 3rd player's name
+
+        char receivedName2[256];
+    
+        int bytesReceived2 = recv(client[2], receivedName2, sizeof(receivedName2), 0);
+    
+        if (bytesReceived2 > 0) {
+    
+            receivedName2[bytesReceived2] = '\0';  // Null-terminate the string
+            
+        }
+
+        // sending to other three
+
+        send(client[0], receivedName, strlen(receivedName) + 1, 0);
+        send(client[1], receivedName, strlen(receivedName) + 1, 0);
+        send(client[3], receivedName, strlen(receivedName) + 1, 0);
+
+
+
+
+        // getting the last player's name
+
+        char receivedName3[256];
+    
+        int bytesReceived3 = recv(client[3], receivedName3, sizeof(receivedName3), 0);
+    
+        if (bytesReceived3 > 0) {
+    
+            receivedName3[bytesReceived3] = '\0';  // Null-terminate the string
+            
+        }
+
+        // sending to other three
+
+        send(client[0], receivedName, strlen(receivedName) + 1, 0);
+        send(client[1], receivedName, strlen(receivedName) + 1, 0);
+        send(client[2], receivedName, strlen(receivedName) + 1, 0);
+
+
 
 
  while (1) {
@@ -373,7 +474,7 @@ int single () {
                             board[i][j] = snake[i][j];
                             
                             
-                            // When snake/ladder comes on the way
+                            // When snake comes on the way
                             if (y==se1[a]) {
                                 if (snake[i][j] == e1) {
                                     board[i][j] = 0;
@@ -387,6 +488,8 @@ int single () {
                                     y = e2;
                                 }
                             }
+
+                            // When ladder comes on the way
 
                             if (y==se3[c]) {
                                 if (snake[i][j] == e3) {
@@ -415,6 +518,7 @@ int single () {
                                     y = ladder3[c1];
                                 }
                             }
+
 
                             // When they don't
                             else if (y==snake[i][j]) {
@@ -473,6 +577,9 @@ int single () {
         k++;
 
     }
+
+    printTheEnd ();
+    
 
     return 0;
 
