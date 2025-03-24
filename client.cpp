@@ -243,6 +243,11 @@ int main() {
                     int b1 = rand() % 3 +1;
                     int c1 = rand() % 3 +1;
 
+                    int point_lose = rand () % 95 + 1;
+
+                    int point_gain = rand () % 95 + 1;
+
+
                     for (i=0; i<10; i++) {
                         for (j=0; j<10; j++) {
                             board[i][j] = snake[i][j];
@@ -294,6 +299,15 @@ int main() {
                             else if (y==snake[i][j]) {
                                 board[i][j] = 0;
                             }
+
+                            if (y==point_lose) {
+                                life--;
+                            }
+
+                            if (y==point_gain) {
+                                life++;
+                            }
+
                         }
                     }
 
@@ -407,6 +421,8 @@ int main() {
     */
 
     // Clean up
+
+    printf ("Close the server terminal after the game is over.\n");
     
 
     printTheEnd ();

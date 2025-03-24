@@ -150,6 +150,8 @@ int multiplayer () {
  cout << "Server is running on port: " << PORT << endl;
 
 // this part is about setting up the connections with clients.
+
+printf ("Please open a terminal to run the client code.\n");
  
 
         while (clientNum < MAX_CLIENTS) {
@@ -468,6 +470,10 @@ int single () {
                     int b1 = rand() % 3 +1;
                     int c1 = rand() % 3 +1;
 
+                    int point_lose = rand () % 95 + 1;
+
+                    int point_gain = rand () % 95 + 1;
+
 
                     for (i=0; i<10; i++) {
                         for (j=0; j<10; j++) {
@@ -524,6 +530,15 @@ int single () {
                             else if (y==snake[i][j]) {
                                 board[i][j] = 0;
                             }
+
+                            if (y==point_lose) {
+                                life--;
+                            }
+
+                            if (y==point_gain) {
+                                life++;
+                            }
+                            
                         }
                     }
 
