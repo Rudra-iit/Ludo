@@ -37,7 +37,8 @@ int l1 = 6, l2 = 21, l3 = 27;
 
 void logo () {
     
-    printf ("\n\n");
+    printf ("\n-----------------------------------------\n");
+
     printf ("***       ***   ***  ***        *********\n");
     printf ("***       ***   ***  ******     *********\n");
     printf ("***       ***   ***  *** ****   ***   ***\n");
@@ -46,7 +47,10 @@ void logo () {
     printf ("***       ***   ***  *** ****   ***   ***\n");
     printf ("********  *********  ******     *********\n");
     printf ("********  *********  ***        *********\n");
-    printf ("\n\n");
+
+    printf ("\n");
+
+    printf ("-----------------------------------------\n\n");
 }
 
 
@@ -78,12 +82,15 @@ void print (int board[10][10]) {
 
 }
 
+
 struct ClientData {
  int sum;
  int id;
 };
 
+
 int multiplayer () {
+
  WSADATA wsa;
  SOCKET server, client[MAX_CLIENTS];
  SOCKADDR_IN serverAddr, clientAddr;
@@ -126,7 +133,7 @@ int multiplayer () {
 
  cout << "Server is running on port: " << PORT << endl;
 
-
+// this part is about setting up the connections with clients.
  
 
         while (clientNum < MAX_CLIENTS) {
