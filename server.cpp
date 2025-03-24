@@ -88,11 +88,11 @@ void printTheEnd () {
 
     printf ("\n");
 
-    printf ("####  ##    #  ##");
-    printf ("#     # #   #  # #");
-    printf ("###   #  #  #  #  #");
-    printf ("#     #   # #  # #");
-    printf ("####  #    ##  ##");
+    printf ("####  ##    #  ##\n");
+    printf ("#     # #   #  # #\n");
+    printf ("###   #  #  #  #  #\n");
+    printf ("#     #   # #  # #\n");
+    printf ("####  #    ##  ##\n");
 
     printf ("\n");
 
@@ -422,6 +422,8 @@ int single () {
 
     logo ();
 
+    printf ("Enter your name: ");
+
     for (i=10-1; i>=0; i--) {
         for (j=10-1; j>=0; j--) {
             snake[i][j] = i*10 + (j+1);
@@ -578,6 +580,9 @@ int single () {
 
             // Disqualified
             printf ("Game over.\n");
+
+            printTheEnd ();
+
             break;
 
         }
@@ -586,14 +591,15 @@ int single () {
 
             // Finish the game
             printf ("%s won.\n", name);
+
+            printTheEnd ();
+
             break;
 
         }
         k++;
 
     }
-
-    printTheEnd ();
     
 
     return 0;
