@@ -282,17 +282,26 @@ int main() {
 
         printf ("This player's position is %d & life is %d\n", c, d);
 
+        printf ("Next player is rolling...\n");
+
+        int e, f;
+        recv(clientSocket, (char*)&e, sizeof(e), 0);
+        recv(clientSocket, (char*)&f, sizeof(f), 0);
+
+
+        printf ("This player's position is %d & life is %d\n", e, f);
+
         printf ("Your turn.\n");
         
 
-        if (life == 0 || a == 100 || c == 100) {
+        if (life == 0 || a == 100 || c == 100 || e == 100) {
 
             printf ("Game over. You lost.\n");
             break;
 
         }
 
-        if (w==1 || b==0 || d==0) {
+        if (w==1 || b==0 || d==0 || f==0) {
 
             // Finish the game
             printf ("You won.\n");

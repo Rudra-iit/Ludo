@@ -9,7 +9,7 @@
 #include <algorithm>
 #include <chrono>
 
-#define MAX_CLIENTS 3
+#define MAX_CLIENTS 4
 #define PORT 8080
 
 #pragma comment(lib, "ws2_32.lib")
@@ -18,7 +18,7 @@ using namespace std;
 
 
 
-int k = 0, x, y, a, b, c;
+int k = 0, x, y, a, b, c, e, f;
 int board[10][10], snake[10][10], i, j, w=0, q=0, p=0, d=0;
 
 int se1 [4] = {36, 48, 54, 57};
@@ -161,6 +161,9 @@ int multiplayer () {
 
             send(client[2], (char*)&x, sizeof(x), 0);
             send(client[2], (char*)&y, sizeof(y), 0);
+            
+            send(client[3], (char*)&x, sizeof(x), 0);
+            send(client[3], (char*)&y, sizeof(y), 0);
 
 
         recv(client[1], (char*)&numbers[0], sizeof(numbers[0]), 0);
@@ -175,6 +178,9 @@ int multiplayer () {
             send(client[2], (char*)&a, sizeof(a), 0);
             send(client[2], (char*)&b, sizeof(b), 0);
 
+            send(client[3], (char*)&a, sizeof(a), 0);
+            send(client[3], (char*)&b, sizeof(b), 0);
+
         recv(client[2], (char*)&numbers[0], sizeof(numbers[0]), 0);
         recv(client[2], (char*)&numbers[1], sizeof(numbers[1]), 0);
 
@@ -187,8 +193,29 @@ int multiplayer () {
             send(client[1], (char*)&c, sizeof(c), 0);
             send(client[1], (char*)&d, sizeof(d), 0);
 
+            send(client[3], (char*)&c, sizeof(c), 0);
+            send(client[3], (char*)&d, sizeof(d), 0);
 
-        if (x == 100 || a == 100 || c == 100) {
+            
+        recv(client[3], (char*)&numbers[0], sizeof(numbers[0]), 0);
+        recv(client[3], (char*)&numbers[1], sizeof(numbers[1]), 0);
+
+        e = numbers [0];
+        f = numbers [1];
+
+        
+                
+        send(client[0], (char*)&e, sizeof(e), 0);
+        send(client[0], (char*)&f, sizeof(f), 0);
+
+        send(client[1], (char*)&e, sizeof(e), 0);
+        send(client[1], (char*)&f, sizeof(f), 0);
+
+        send(client[2], (char*)&e, sizeof(e), 0);
+        send(client[2], (char*)&f, sizeof(f), 0);
+
+
+        if (x == 100 || a == 100 || c == 100 || e == 100) {
  
             closesocket(server);          
 
@@ -197,6 +224,8 @@ int multiplayer () {
             closesocket (client [1]);
 
             closesocket (client [2]);
+
+            closesocket (client [3]);
 
 
             break;
@@ -224,8 +253,14 @@ int multiplayer () {
         }
 
 
+        if (f==0) {
 
-        if (y==0 && b==0 && d==0) {
+            closesocket(client[3]);
+        }
+
+
+
+        if (y==0 && b==0 && d==0 && f==0) {
 
             closesocket(server);
 
@@ -234,6 +269,9 @@ int multiplayer () {
             closesocket (client [1]);
 
             closesocket (client [2]);
+            
+            closesocket (client [3]);
+            
 
 
             break;
@@ -253,6 +291,8 @@ int multiplayer () {
  closesocket (client [1]);
 
  closesocket (client [2]);
+            
+ closesocket (client [3]);
  
 
  WSACleanup();
@@ -318,9 +358,11 @@ int single () {
                     int b1 = rand() % 3 +1;
                     int c1 = rand() % 3 +1;
 
+
                     for (i=0; i<10; i++) {
                         for (j=0; j<10; j++) {
                             board[i][j] = snake[i][j];
+                            
                             
                             // When snake/ladder comes on the way
                             if (y==se1[a]) {
