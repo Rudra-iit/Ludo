@@ -1,0 +1,399 @@
+#include <iostream>
+#include <stdio.h>
+#include <stdlib.h>
+#include <conio.h>
+#include <winsock2.h>
+#include <windows.h>
+#include <unistd.h>
+#include <vector>
+#include <algorithm>
+#include <chrono>
+
+#define MAX_CLIENTS 3
+#define PORT 8080
+
+#pragma comment(lib, "ws2_32.lib")
+
+using namespace std;
+
+
+
+int k = 0, x, y, a, b, c;
+int board[10][10], snake[10][10], i, j, w=0, q=0, p=0, d=0;
+
+
+
+void print (int board[10][10]) {
+
+    printf ("\n");
+
+    for (i=10-1; i>=0; i--) {
+
+        for (j=10-1; j>=0; j--) {
+
+            if (board[i][j]==100) {
+                printf ("%d ", board[i][j]);
+            }
+
+            else if (board[i][j]>=10 && board[i][j]<100) {
+                printf (" %d ", board[i][j]);
+            }
+
+            else {
+                printf ("  %d ", board[i][j]);
+            }
+
+        }
+
+        printf ("\n");
+
+    }
+
+}
+
+struct ClientData {
+ int sum;
+ int id;
+};
+
+int multiplayer () {
+ WSADATA wsa;
+ SOCKET server, client[MAX_CLIENTS];
+ SOCKADDR_IN serverAddr, clientAddr;
+ int clientSize = sizeof (clientAddr);
+ ClientData clientData [MAX_CLIENTS];
+ int clientNum = 0;
+
+ if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0) {
+        cerr << "Winsock initialization failed.\n";
+        return 1;
+ }    
+ 
+ server = socket(AF_INET, SOCK_STREAM, 0);
+ 
+ if (server == INVALID_SOCKET) {
+        cerr << "Failed to create socket.\n";
+        WSACleanup();
+        return 1;
+ }
+
+ // Setup server address
+ serverAddr.sin_family = AF_INET;
+ serverAddr.sin_addr.s_addr = INADDR_ANY;
+ serverAddr.sin_port = htons(PORT);
+
+ if (bind(server, (SOCKADDR*)&serverAddr, sizeof(serverAddr)) == SOCKET_ERROR) {
+        cerr << "Bind failed.\n";
+        closesocket(server);
+        WSACleanup();
+        return 1;
+ }
+ 
+ // Listen for connections
+ if (listen(server, MAX_CLIENTS) == SOCKET_ERROR) {
+        cerr << "Listen failed.\n";
+        closesocket(server);
+        WSACleanup();
+        return 1;
+ }
+
+ cout << "Server is running on port: " << PORT << endl;
+
+
+ 
+
+        while (clientNum < MAX_CLIENTS) {
+               cout << "Waiting for client connection...\n";
+               client[clientNum] = accept(server, (SOCKADDR*)&clientAddr, &clientSize);
+               if (client[clientNum] == INVALID_SOCKET) {
+                  cerr << "Client connection failed.\n";
+                  continue;
+               }
+
+        
+
+               cout << "Client connected. ID: " << clientNum + 1 << "\n";
+
+               clientNum ++;
+        }    
+
+
+ while (1) {
+
+
+        int numbers[2];
+        
+        recv(client[0], (char*)&numbers[0], sizeof(numbers[0]), 0);
+        recv(client[0], (char*)&numbers[1], sizeof(numbers[1]), 0);
+
+            x = numbers [0];
+            y = numbers [1];
+                
+            send(client[1], (char*)&x, sizeof(x), 0);
+            send(client[1], (char*)&y, sizeof(y), 0);
+
+            send(client[2], (char*)&x, sizeof(x), 0);
+            send(client[2], (char*)&y, sizeof(y), 0);
+
+
+        recv(client[1], (char*)&numbers[0], sizeof(numbers[0]), 0);
+        recv(client[1], (char*)&numbers[1], sizeof(numbers[1]), 0);
+
+            a = numbers [0];
+            b = numbers [1];
+                
+            send(client[0], (char*)&a, sizeof(a), 0);
+            send(client[0], (char*)&b, sizeof(b), 0);
+
+            send(client[2], (char*)&a, sizeof(a), 0);
+            send(client[2], (char*)&b, sizeof(b), 0);
+
+        recv(client[2], (char*)&numbers[0], sizeof(numbers[0]), 0);
+        recv(client[2], (char*)&numbers[1], sizeof(numbers[1]), 0);
+
+            c = numbers [0];
+            d = numbers [1];
+                
+            send(client[0], (char*)&c, sizeof(c), 0);
+            send(client[0], (char*)&d, sizeof(d), 0);
+
+            send(client[1], (char*)&c, sizeof(c), 0);
+            send(client[1], (char*)&d, sizeof(d), 0);
+
+
+        if (x == 100 || a == 100 || c == 100) {
+ 
+            closesocket(server);          
+
+            closesocket (client [0]);
+
+            closesocket (client [1]);
+
+            closesocket (client [2]);
+
+
+            break;
+
+        }
+
+
+        if (y==0) {
+
+            closesocket(client[0]);
+        }
+
+
+
+        if (b==0) {
+
+            closesocket(client[1]);
+        }
+
+
+
+        if (d==0) {
+
+            closesocket(client[2]);
+        }
+
+
+
+        if (y==0 && b==0 && d==0) {
+
+            closesocket(server);
+
+            closesocket (client [0]);
+
+            closesocket (client [1]);
+
+            closesocket (client [2]);
+
+
+            break;
+
+        }
+
+
+
+     k++;
+   }
+
+
+ closesocket(server); 
+
+ closesocket (client [0]);
+
+ closesocket (client [1]);
+
+ closesocket (client [2]);
+ 
+
+ WSACleanup();
+
+ return 0;
+}
+
+
+
+
+int single () {
+
+
+    printf ("Welcome to the game!\n");
+
+    printf ("");
+
+    for (i=10-1; i>=0; i--) {
+        for (j=10-1; j>=0; j--) {
+            snake[i][j] = i*10 + (j+1);
+        }
+    }
+
+    int y = 1;
+    int life = 10;
+
+    int k=0;
+    int time_limit = 10; // Time limit in seconds
+
+    char name[10];
+    scanf (" %s", name);
+
+    while (1) {
+
+        int m, n, o;
+        int m1, n1, o1;
+
+        clock_t start_time = clock();
+
+        printf("-\nRole %d: Please role dice within %d seconds...\n", k + 1, time_limit);
+
+        int input_received = 0; // Flag to check if input is received
+
+        while ((clock() - start_time) / CLOCKS_PER_SEC < time_limit) {
+
+            if (_kbhit()) { // Check if a key has been pressed
+
+                char c = getch(); // Capture the key press
+                printf("%s entered: '%c'\n", name, c);
+
+                if (c=='y') {
+                    int x = rand() % 5 + 1;
+                    y = y+x;
+
+                    printf ("Dice roled: %d\n", x);
+
+                    // Random numbers as snake or ladder
+                    int a = rand() % 90 + 1;
+                    int b = rand() % 50 + 1;
+
+                    if (a>b) {
+                        printf ("Snake exists between %d and %d.\n", a, b);
+                    }
+
+                    else {
+                        printf ("Ladder exists between %d and %d.\n", a, b);
+                    }
+
+                    for (i=0; i<10; i++) {
+                        for (j=0; j<10; j++) {
+                            board[i][j] = snake[i][j];
+                            
+                            // When snake/ladder comes on the way
+                            if (y==a) {
+                                if (snake[i][j] == b) {
+                                    board[i][j] = 0;
+                                    y = b;
+                                }
+                            }
+
+                            // When they don't
+                            else if (y==snake[i][j]) {
+                                board[i][j] = 0;
+                            }
+                        }
+                    }
+
+                    print (board);
+                    
+                    // Check when the game's ending
+                    if (y==100) {
+                        w=1;
+                    }
+                    
+                    // If the dice count goes out of 100 without the game finishing
+                    if (y>100) {
+                        y = y-x;
+                    }
+                    
+                }
+                else {
+                    printf ("Try again.\n");
+                }
+                input_received = 1;
+                break; // Exit the loop if a key is pressed
+
+            }
+
+        }
+
+        if (!input_received) {
+
+            // Not timely input: life lost
+            printf("No input received on this iteration.\n");
+            life--;
+            printf ("Life is %d\n", life);
+
+        }
+
+        if (life==0) {
+
+            // Disqualified
+            printf ("Game over.\n");
+            break;
+
+        }
+
+        if (w==1) {
+
+            // Finish the game
+            printf ("%s won.\n", name);
+            break;
+
+        }
+        k++;
+
+    }
+
+    return 0;
+
+}
+
+
+
+int main () {
+
+    int choice;
+
+    printf ("Choose the type of game: 1) single-player 2) multiplayer\nClick: 1 or 2");
+
+    scanf ("%d", &choice);
+
+    if (choice == 1) {
+
+        single ();
+
+    }
+
+    else if (choice == 2) {
+
+        multiplayer ();
+
+    }
+
+    else {
+        printf ("Sorry, try again.\n");
+    }
+
+    return 0;
+
+}

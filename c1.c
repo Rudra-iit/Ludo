@@ -1,16 +1,20 @@
+#include <winsock2.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <conio.h>
 #include <time.h>
 #include <unistd.h>
 
-int board[10][10], snake[10][10], i, j, w=0;
+#pragma comment(lib, "ws2_32.lib")
+
+int board[10][10], snake[10][10], i, j, w=0, q=0, p=0, d=0;
 
 void print (int board[10][10]) {
 
     printf ("\n");
 
     for (i=10-1; i>=0; i--) {
+
         for (j=10-1; j>=0; j--) {
 
             if (board[i][j]==100) {
@@ -28,25 +32,31 @@ void print (int board[10][10]) {
         }
 
         printf ("\n");
+
     }
+
 }
 
 int main() {
-
-    // A second matrix with fixed values to compare with
-
     for (i=10-1; i>=0; i--) {
         for (j=10-1; j>=0; j--) {
             snake[i][j] = i*10 + (j+1);
         }
     }
+
     int y = 1;
     int life = 10;
 
     int k=0;
-    int time_limit = 2; // Time limit in seconds
+    int time_limit = 10; // Time limit in seconds
+
+    char name[10];
+    scanf (" %s", name);
 
     while (1) {
+
+        int m, n, o;
+        int m1, n1, o1;
 
         clock_t start_time = clock();
 
@@ -59,7 +69,7 @@ int main() {
             if (_kbhit()) { // Check if a key has been pressed
 
                 char c = getch(); // Capture the key press
-                printf("You entered: '%c'\n", c);
+                printf("%s entered: '%c'\n", name, c);
 
                 if (c=='y') {
                     int x = rand() % 5 + 1;
@@ -141,7 +151,7 @@ int main() {
         if (w==1) {
 
             // Finish the game
-            printf ("Game completed.\n");
+            printf ("%s won.\n", name);
             break;
 
         }
