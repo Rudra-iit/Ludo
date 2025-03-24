@@ -21,6 +21,33 @@ using namespace std;
 int k = 0, x, y, a, b, c;
 int board[10][10], snake[10][10], i, j, w=0, q=0, p=0, d=0;
 
+int se1 [4] = {36, 48, 54, 57};
+int se2 [4] = {93, 88, 67, 66};
+int se3 [4] = {60, 51, 40, 41};
+
+int e1 = 20, e2 = 40, e3 = 30;
+
+
+int ladder1 [4] = {30, 70, 96, 92};
+int ladder2 [4] = {87, 84, 71, 70};
+int ladder3 [4] = {55, 18, 80, 81};
+
+int l1 = 6, l2 = 21, l3 = 27;
+
+
+void logo () {
+    
+    printf ("\n\n");
+    printf ("***       ***   ***  ***        *********\n");
+    printf ("***       ***   ***  ******     *********\n");
+    printf ("***       ***   ***  *** ****   ***   ***\n");
+    printf ("***       ***   ***  ***   **   ***   ***\n");
+    printf ("***       ***   ***  ***   **   ***   ***\n");
+    printf ("***       ***   ***  *** ****   ***   ***\n");
+    printf ("********  *********  ******     *********\n");
+    printf ("********  *********  ***        *********\n");
+    printf ("\n\n");
+}
 
 
 void print (int board[10][10]) {
@@ -241,7 +268,7 @@ int single () {
 
     printf ("Welcome to the game!\n");
 
-    printf ("");
+    logo ();
 
     for (i=10-1; i>=0; i--) {
         for (j=10-1; j>=0; j--) {
@@ -283,26 +310,58 @@ int single () {
                     printf ("Dice roled: %d\n", x);
 
                     // Random numbers as snake or ladder
-                    int a = rand() % 90 + 1;
-                    int b = rand() % 50 + 1;
+                    int a = rand() % 3 + 1;
+                    int b = rand() % 3 +1;
+                    int c = rand() % 3 +1;
 
-                    if (a>b) {
-                        printf ("Snake exists between %d and %d.\n", a, b);
-                    }
-
-                    else {
-                        printf ("Ladder exists between %d and %d.\n", a, b);
-                    }
+                    int a1 = rand() % 3 +1;
+                    int b1 = rand() % 3 +1;
+                    int c1 = rand() % 3 +1;
 
                     for (i=0; i<10; i++) {
                         for (j=0; j<10; j++) {
                             board[i][j] = snake[i][j];
                             
                             // When snake/ladder comes on the way
-                            if (y==a) {
-                                if (snake[i][j] == b) {
+                            if (y==se1[a]) {
+                                if (snake[i][j] == e1) {
                                     board[i][j] = 0;
-                                    y = b;
+                                    y = e1;
+                                }
+                            }
+
+                            if (y==se2[b]) {
+                                if (snake[i][j] == e2) {
+                                    board[i][j] = 0;
+                                    y = e2;
+                                }
+                            }
+
+                            if (y==se3[c]) {
+                                if (snake[i][j] == e3) {
+                                    board[i][j] = 0;
+                                    y = e3;
+                                }
+                            }
+                            
+                            if (y==l1) {
+                                if (snake[i][j] == ladder1[a1]) {
+                                    board[i][j] = 0;
+                                    y = ladder1[a1];
+                                }
+                            }
+                            
+                            if (y==l2) {
+                                if (snake[i][j] == ladder2[b1]) {
+                                    board[i][j] = 0;
+                                    y = ladder2[b1];
+                                }
+                            }
+                            
+                            if (y==l3) {
+                                if (snake[i][j] == ladder3[c1]) {
+                                    board[i][j] = 0;
+                                    y = ladder3[c1];
                                 }
                             }
 
@@ -374,7 +433,7 @@ int main () {
 
     int choice;
 
-    printf ("Choose the type of game: 1) single-player 2) multiplayer\nClick: 1 or 2");
+    printf ("Choose the type of game: 1) single-player 2) multiplayer\nClick: 1 or 2\n");
 
     scanf ("%d", &choice);
 
