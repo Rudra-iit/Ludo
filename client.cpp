@@ -155,13 +155,6 @@ int main() {
 
     std::cout << "Connected to the server.\n";
 
-    // Input three integers from the user
-    /* int numbers[3];
-    std::cout << "Enter three integers:\n";
-    for (int i = 0; i < 3; ++i) {
-        std::cout << "Number " << (i + 1) << ": ";
-        std::cin >> numbers[i];
-    } */
 
     printf ("Welcome!\n");
 
@@ -405,28 +398,7 @@ int main() {
         
 
     }
-
-    /*
-
-    // Send the integers to the server
-    if (send(clientSocket, (char*)numbers, sizeof(numbers), 0) == SOCKET_ERROR) {
-        std::cerr << "Failed to send data to server.\n";
-        closesocket(clientSocket);
-        WSACleanup();
-        return 1;
-    }
-
-    std::cout << "Data sent to server successfully.\n";
-
-    // Optionally, wait for the server's response (if any)
-
-    int receivedLargestSum;
-    recv(clientSocket, (char*)&receivedLargestSum, sizeof(receivedLargestSum), 0);
-    cout << "Largest sum received from server: " << receivedLargestSum << "\n";
-
-    //cout << "Client " << bytesReceived1 << " has the largest sum: " << bytesReceived2 << endl;
-
-    */
+    
 
     // Clean up
 
