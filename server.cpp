@@ -476,6 +476,14 @@ int single () {
 
                     int point_gain = rand () % 95 + 1;
 
+                    cout<<"Snakes are between "<<se1[a]<<" & "<<e1<<", "<<se2[b]<<" & "<<e2<<" and "<<se3[c]<<" & "<<e3<<endl;
+
+                    cout<<"Ladders are between "<<l1<<" & "<<ladder1[a1]<<", "<<l2<<" & "<<ladder2[b1]<<" and "<<l3<<" & "<<ladder3[c1]<<endl;
+
+                    cout << "Life will lose at " << point_lose << endl;
+
+                    cout <<"Life will gain at " << point_gain << endl;
+
 
                     for (i=0; i<10; i++) {
                         for (j=0; j<10; j++) {

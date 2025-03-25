@@ -247,6 +247,14 @@ int main() {
 
                     int point_gain = rand () % 95 + 1;
 
+                    cout<<"Snakes are between "<<se1[a]<<" & "<<e1<<", "<<se2[b]<<" & "<<e2<<" and "<<se3[c]<<" & "<<e3<<endl;
+
+                    cout<<"Ladders are between "<<l1<<" & "<<ladder1[a1]<<", "<<l2<<" & "<<ladder2[b1]<<" and "<<l3<<" & "<<ladder3[c1]<<endl;
+
+                    cout << "Life will lose at " << point_lose << endl;
+
+                    cout <<"Life will gain at " << point_gain << endl;
+
 
                     for (i=0; i<10; i++) {
                         for (j=0; j<10; j++) {
@@ -355,7 +363,7 @@ int main() {
         recv(clientSocket, (char*)&a, sizeof(a), 0);
         recv(clientSocket, (char*)&b, sizeof(b), 0);
 
-        cout << receivedName << "'s position is " << a << " & life is " << b << "\n-\n";
+        cout << "Next player's position is " << a << " & life is " << b << "\n-\n";
 
         printf ("Next player is rolling...\n");
 
@@ -364,7 +372,7 @@ int main() {
         recv(clientSocket, (char*)&c, sizeof(c), 0);
         recv(clientSocket, (char*)&d, sizeof(d), 0);
 
-        cout << receivedName1 << "'s position is " << c << " & life is " << d << "\n-\n";
+        cout << "Next player's position is " << c << " & life is " << d << "\n-\n";
 
         printf ("Next player is rolling...\n");
 
@@ -373,7 +381,7 @@ int main() {
         recv(clientSocket, (char*)&f, sizeof(f), 0);
 
 
-        cout << receivedName2 << "'s position is " << e << " & life is " << e << "\n-\n";
+        cout << "Next player's position is " << e << " & life is " << e << "\n-\n";
 
         printf ("\nYour turn.\n");
         
