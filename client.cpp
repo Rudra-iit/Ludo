@@ -356,7 +356,7 @@ int main() {
         recv(clientSocket, (char*)&a, sizeof(a), 0);
         recv(clientSocket, (char*)&b, sizeof(b), 0);
 
-        cout << "Next player's position is " << a << " & life is " << b << "\n-\n";
+        // cout << "Next player's position is " << a << " & life is " << b << "\n-\n";
 
         printf ("Next player is rolling...\n");
 
@@ -365,7 +365,7 @@ int main() {
         recv(clientSocket, (char*)&c, sizeof(c), 0);
         recv(clientSocket, (char*)&d, sizeof(d), 0);
 
-        cout << "Next player's position is " << c << " & life is " << d << "\n-\n";
+        // cout << "Next player's position is " << c << " & life is " << d << "\n-\n";
 
         printf ("Next player is rolling...\n");
 
@@ -374,7 +374,7 @@ int main() {
         recv(clientSocket, (char*)&f, sizeof(f), 0);
 
 
-        cout << "Next player's position is " << e << " & life is " << e << "\n-\n";
+        // cout << "Next player's position is " << e << " & life is " << e << "\n-\n";
 
         printf ("\nYour turn.\n");
         
