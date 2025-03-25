@@ -350,7 +350,7 @@ int main() {
 
         }
 
-        printf ("Next player is rolling...\n");
+        printf ("Position is %d, life is %d\nNext player is rolling...\n", y, life);
 
         int a, b;
         recv(clientSocket, (char*)&a, sizeof(a), 0);
